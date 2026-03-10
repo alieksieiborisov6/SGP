@@ -106,25 +106,39 @@ function renderEmployeeButtons(taskIndex){
 }
 
 function renderTasks(){
-    const grid=document.querySelector('.tasks-grid'); 
-    grid.innerHTML='';
+    const grid = document.querySelector('.tasks-grid'); 
+    grid.innerHTML = '';
     if(selectedObjectIndex===null) return;
-    const tasks=objects[selectedObjectIndex].tasks.filter(t=>currentEmployeeFilter==='all'||t.employee===currentEmployeeFilter);
+
+    const tasks = objects[selectedObjectIndex].tasks.filter(
+        t => currentEmployeeFilter==='all' || t.employee===currentEmployeeFilter
+    );
+
     tasks.forEach((task,index)=>{
-        const div=document.createElement('div'); 
-        div.className=`card task-card ${task.status}`; 
-        div.innerHTML=`<h4>${task.name}</h4><p>${task.desc}</p>`;
-        
-        // Только статус оставляем кнопки, сотрудник теперь только в модалке
+        const div = document.createElement('div'); 
+        div.className = `card task-card ${task.status}`; 
+
+        // Показываем название, описание и сотрудника как текст
+        div.innerHTML = `
+            <h4>${task.name}</h4>
+            <p>${task.desc}</p>
+            <p class="task-employee">Сотрудник: ${task.employee}</p>
+        `;
+
+        // Статус оставляем кнопками
         div.appendChild(renderStatusButtons(index));
-        
-        const buttons=document.createElement('div'); 
-        buttons.className='card-buttons';
-        buttons.innerHTML=`<button class="edit-btn" onclick="openEditTask(${index}); event.stopPropagation();">Редактировать</button>
-                           <button class="delete-btn" onclick="deleteTask(${index}); event.stopPropagation();">×</button>`;
+
+        // Редактировать / удалить
+        const buttons = document.createElement('div'); 
+        buttons.className = 'card-buttons';
+        buttons.innerHTML = `
+            <button class="edit-btn" onclick="openEditTask(${index}); event.stopPropagation();">Редактировать</button>
+            <button class="delete-btn" onclick="deleteTask(${index}); event.stopPropagation();">×</button>
+        `;
         div.appendChild(buttons);
 
-        div.onclick=()=>{selectedTaskIndex=index; highlightSelectedTask();};
+        // Клик для выделения задачи
+        div.onclick = ()=>{selectedTaskIndex=index; highlightSelectedTask();};
         if(index===selectedTaskIndex) div.classList.add('selected-task');
         grid.appendChild(div);
     });
@@ -158,4 +172,5 @@ function deleteTask(index){ objects[selectedObjectIndex].tasks.splice(index,1); 
 function highlightSelectedTask(){ renderTasks(); }
 
 renderEmployeeDropdown(); renderObjects(); renderTasks();
+
 
