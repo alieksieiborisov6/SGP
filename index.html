@@ -20,14 +20,12 @@
 
 <main>
   <div class="container">
-    <!-- Левая колонка: Объекты -->
     <section class="objects-section">
       <h2>Объекты</h2>
       <button class="add-btn" onclick="openModal('add-object')">Добавить объект</button>
       <div class="objects-grid"></div>
     </section>
 
-    <!-- Правая колонка: Задачи -->
     <section class="tasks-section">
       <h2>Задачи</h2>
       <button class="add-btn" onclick="openModal('add-task')">Добавить задачу</button>
@@ -36,31 +34,31 @@
   </div>
 </main>
 
-<!-- Модальные окна -->
+<!-- Модалки -->
 
-<!-- Добавление объекта -->
+<!-- Добавить объект -->
 <div id="add-object" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('add-object')">&times;</span>
     <h3>Добавить объект</h3>
     <input type="text" id="object-name" placeholder="Название объекта">
-    <textarea id="object-desc" placeholder="Описание"></textarea>
-    <button onclick="addObject()">Сохранить</button>
+    <textarea id="object-desc" placeholder="Описание объекта"></textarea>
+    <button class="save-btn" onclick="addObject()">Сохранить</button>
   </div>
 </div>
 
-<!-- Редактирование объекта -->
+<!-- Редактировать объект -->
 <div id="edit-object" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('edit-object')">&times;</span>
     <h3>Редактировать объект</h3>
     <input type="text" id="edit-object-name" placeholder="Название объекта">
-    <textarea id="edit-object-desc" placeholder="Описание"></textarea>
-    <button onclick="saveObjectEdit()">Сохранить</button>
+    <textarea id="edit-object-desc" placeholder="Описание объекта"></textarea>
+    <button class="save-btn" onclick="saveObjectEdit()">Сохранить</button>
   </div>
 </div>
 
-<!-- Добавление задачи -->
+<!-- Добавить задачу -->
 <div id="add-task" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('add-task')">&times;</span>
@@ -73,11 +71,11 @@
       <option value="done">Завершено</option>
     </select>
     <select id="task-employee"></select>
-    <button onclick="addTask()">Сохранить</button>
+    <button class="save-btn" onclick="addTask()">Сохранить</button>
   </div>
 </div>
 
-<!-- Редактирование задачи -->
+<!-- Редактировать задачу -->
 <div id="edit-task" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('edit-task')">&times;</span>
@@ -90,7 +88,7 @@
       <option value="done">Завершено</option>
     </select>
     <select id="edit-task-employee"></select>
-    <button onclick="saveTaskEdit()">Сохранить</button>
+    <button class="save-btn" onclick="saveTaskEdit()">Сохранить</button>
   </div>
 </div>
 
