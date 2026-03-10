@@ -5,13 +5,13 @@ const employees = [
   {name: "Ольга Смирнова", role: "Архитектор"}
 ];
 
-let objects = []; // {name, desc, tasks: []}
+let objects = JSON.parse(localStorage.getItem('objects')) || [];
 let selectedObjectIndex = null;
 let currentEmployeeFilter = "all";
 let editObjectIndex = null;
 let editTaskIndex = null;
 
-// --- Инициализация dropdown сотрудников ---
+// --- Dropdown сотрудников ---
 function renderEmployeeDropdown() {
     const taskSelect = document.getElementById('task-employee');
     taskSelect.innerHTML = '';
@@ -41,20 +41,12 @@ document.getElementById('current-employee').addEventListener('change', function(
     renderTasks();
 });
 
-function renderEditTaskEmployeeDropdown() {
-    const select = document.getElementById('edit-task-employee');
-    select.innerHTML = '';
-    employees.forEach(emp => {
-        const option = document.createElement('option');
-        option.value = emp.name;
-        option.textContent = `${emp.name} (${emp.role})`;
-        select.appendChild(option);
-    });
-}
-
-// --- Модалки ---
+// --- Modals ---
 function openModal(id){ document.getElementById(id).style.display='block'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+// --- Сохранение в LocalStorage ---
+function saveData(){ localStorage.setItem('objects', JSON.stringify(objects)); }
 
 // --- Объекты ---
 function addObject(){
@@ -63,6 +55,7 @@ function addObject(){
     if(!name) return alert("Введите название объекта");
     objects.push({name, desc, tasks: []});
     selectedObjectIndex = objects.length-1;
+    saveData();
     renderObjects();
     renderTasks();
     closeModal('add-object');
@@ -87,6 +80,7 @@ function renderObjects(){
 function deleteObject(index){
     objects.splice(index,1);
     if(selectedObjectIndex>=objects.length) selectedObjectIndex=objects.length-1;
+    saveData();
     renderObjects();
     renderTasks();
 }
@@ -105,6 +99,7 @@ function saveObjectEdit(){
     if(!name) return alert("Введите название объекта");
     objects[editObjectIndex].name = name;
     objects[editObjectIndex].desc = desc;
+    saveData();
     renderObjects();
     closeModal('edit-object');
 }
@@ -118,10 +113,22 @@ function addTask(){
     const employee = document.getElementById('task-employee').value;
     if(!name) return alert("Введите название задачи");
     objects[selectedObjectIndex].tasks.push({name,desc,status,employee});
+    saveData();
     renderTasks();
     closeModal('add-task');
     document.getElementById('task-name').value='';
     document.getElementById('task-desc').value='';
+}
+
+function renderEditTaskEmployeeDropdown() {
+    const select = document.getElementById('edit-task-employee');
+    select.innerHTML = '';
+    employees.forEach(emp => {
+        const option = document.createElement('option');
+        option.value = emp.name;
+        option.textContent = `${emp.name} (${emp.role})`;
+        select.appendChild(option);
+    });
 }
 
 function renderTasks(){
@@ -150,11 +157,13 @@ function renderTasks(){
 
 function updateTaskStatus(index,value){
     objects[selectedObjectIndex].tasks[index].status=value;
+    saveData();
     renderTasks();
 }
 
 function deleteTask(index){
     objects[selectedObjectIndex].tasks.splice(index,1);
+    saveData();
     renderTasks();
 }
 
@@ -176,6 +185,7 @@ function saveTaskEdit(){
     task.desc = document.getElementById('edit-task-desc').value;
     task.status = document.getElementById('edit-task-status').value;
     task.employee = document.getElementById('edit-task-employee').value;
+    saveData();
     renderTasks();
     closeModal('edit-task');
 }
