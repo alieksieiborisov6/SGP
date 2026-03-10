@@ -1,21 +1,7 @@
-// Firebase init
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore"; 
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDRmT2RygFihWS9OmPNt0SDWTkZlA6-bKM",
-  authDomain: "sgp2026-3184d.firebaseapp.com",
-  projectId: "sgp2026-3184d",
-  storageBucket: "sgp2026-3184d.firebasestorage.app",
-  messagingSenderId: "566527410900",
-  appId: "1:566527410900:web:4ec4cbdf220224c6e0b141",
-  measurementId: "G-WSHB0351M4"
-};
+const db = window.db; // Firebase DB
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Данные
 let objects = [];
 const employees = [
     {name:"Иван Иванов", role:"Менеджер"},
@@ -32,7 +18,7 @@ function closeModal(id){ document.getElementById(id).style.display='none'; }
 // -------------------- RENDER EMPLOYEES --------------------
 function renderEmployeeDropdown(selectId){
     const select = document.getElementById(selectId);
-    select.innerHTML = '';
+    select.innerHTML='';
     employees.forEach(emp=>{
         const option = document.createElement('option');
         option.value = emp.name;
@@ -42,7 +28,7 @@ function renderEmployeeDropdown(selectId){
 }
 
 // -------------------- OBJECTS --------------------
-async function addObject(){
+export async function addObject(){
     const name = document.getElementById('object-name').value;
     const desc = document.getElementById('object-desc').value;
     if(!name) return alert("Введите название объекта");
@@ -53,7 +39,7 @@ async function addObject(){
     loadObjects();
 }
 
-async function loadObjects(){
+export async function loadObjects(){
     const q = query(collection(db,"objects"), orderBy("createdAt"));
     const snapshot = await getDocs(q);
     objects = [];
@@ -77,7 +63,7 @@ function renderObjects(){
 }
 
 // -------------------- TASKS --------------------
-async function addTask(){
+export async function addTask(){
     if(selectedObjectIndex===null) return alert("Выберите объект");
     const name=document.getElementById('task-name').value;
     const desc=document.getElementById('task-desc').value;
@@ -128,7 +114,7 @@ function renderTasks(){
 }
 
 // -------------------- EDIT TASK --------------------
-function openEditTask(i){
+window.openEditTask = function(i){
     editTaskIndex=i;
     const task = objects[selectedObjectIndex].tasks[i];
     document.getElementById('edit-task-name').value = task.name;
@@ -139,7 +125,7 @@ function openEditTask(i){
     openModal('edit-task');
 }
 
-async function saveTaskEdit(){
+window.saveTaskEdit = async function(){
     if(editTaskIndex===null) return;
     const task = objects[selectedObjectIndex].tasks[editTaskIndex];
     const objId = objects[selectedObjectIndex].id;
@@ -156,7 +142,7 @@ async function saveTaskEdit(){
 }
 
 // -------------------- DELETE TASK --------------------
-async function deleteTask(i){
+window.deleteTask = async function(i){
     if(!confirm("Удалить задачу?")) return;
     const task = objects[selectedObjectIndex].tasks[i];
     const objId = objects[selectedObjectIndex].id;
