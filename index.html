@@ -2,37 +2,32 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" href="logo.jpg" type="image/x-icon">
-<title>СГП</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SGP - Управление объектами и задачами</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- Firebase SDK -->
+<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-
 <header>
-  <div class="logo">
-    <h1>СтройГрадПроект</h1>
-  </div>
-  <div class="user-filter">
-    <label for="current-employee">Показать задачи:</label>
-    <select id="current-employee"></select>
-  </div>
+    <h1>Компания SGP</h1>
 </header>
 
-<main>
-  <div class="container">
-    <section class="objects-section">
-      <h2>Объекты</h2>
-      <button class="add-btn" onclick="openModal('add-object')">Добавить объект</button>
-      <div class="objects-grid"></div>
-    </section>
+<div class="container">
+    <div class="left-panel">
+        <h2>Объекты</h2>
+        <button class="add-btn" onclick="openModal('add-object')">+ Добавить объект</button>
+        <div class="objects-grid"></div>
+    </div>
 
-    <section class="tasks-section">
-      <h2>Задачи</h2>
-      <button class="add-btn" onclick="openModal('add-task')">Добавить задачу</button>
-      <div class="tasks-grid"></div>
-    </section>
-  </div>
-</main>
+    <div class="right-panel">
+        <h2>Задачи</h2>
+        <button class="add-btn" onclick="openModal('add-task')">+ Добавить задачу</button>
+        <div class="tasks-grid"></div>
+    </div>
+</div>
 
 <!-- Модалки -->
 <div id="add-object" class="modal">
@@ -45,18 +40,7 @@
   </div>
 </div>
 
-<div id="edit-object" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('edit-object')">&times;</span>
-    <h3>Редактировать объект</h3>
-    <input type="text" id="edit-object-name" placeholder="Название объекта">
-    <textarea id="edit-object-desc" placeholder="Описание объекта"></textarea>
-    <button class="save-btn" onclick="saveObjectEdit()">Сохранить</button>
-  </div>
-</div>
-
 <div id="add-task" class="modal">
-  <select id="edit-task-employee"></select>
   <div class="modal-content">
     <span class="close" onclick="closeModal('add-task')">&times;</span>
     <h3>Добавить задачу</h3>
@@ -88,10 +72,6 @@
   </div>
 </div>
 
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
-
-
-
-
