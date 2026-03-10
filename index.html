@@ -2,66 +2,71 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>СТРОЙ ГРАД ПРОЕКТ</title>
+<title>Компания «СтройГрадПроект»</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
   <div class="logo">
-    <img src="logo.jpg" alt="Логотип">
-    <h1>СТРОЙ ГРАД ПРОЕКТ</h1>
-  </div>
-  <div class="header-controls">
-    <select id="employeeFilter">
-      <option value="all">Все сотрудники</option>
-    </select>
-    <button onclick="openTaskModal()">+ Задача</button>
-    <button onclick="openProjectModal()">+ Объект</button>
+    <img src="logo.jpg" alt="Логотип компании">
+    <h1>СтройГрадПроект</h1>
   </div>
 </header>
 
-<div class="container">
-  <aside>
-    <h3>Объекты 🏢</h3>
-    <ul id="projectList"></ul>
-  </aside>
+<main>
+  <!-- Объекты -->
+  <section class="objects">
+    <h2>Объекты</h2>
+    <button class="add-btn" onclick="openModal('add-object')">Добавить объект</button>
+    <div class="objects-grid"></div>
+  </section>
 
-  <main>
-    <h2 id="projectTitle">Выберите объект</h2>
-    <ul id="taskList" class="task-list"></ul>
-  </main>
-</div>
+  <!-- Задачи -->
+  <section class="tasks">
+    <h2>Задачи</h2>
+    <button class="add-btn" onclick="openModal('add-task')">Добавить задачу</button>
+    <div class="tasks-grid"></div>
+  </section>
 
-<!-- Модальное окно задачи -->
-<div id="taskModal" class="modal">
+  <!-- Сотрудники -->
+  <section class="employees">
+    <h2>Сотрудники</h2>
+    <div class="employee-grid"></div>
+  </section>
+</main>
+
+<!-- Модальные окна -->
+<div id="add-object" class="modal">
   <div class="modal-content">
-    <h3>Новая задача</h3>
-    <input id="taskTitleInput" placeholder="Название задачи">
-    <label>Сотрудники:</label>
-    <select id="taskEmployeeSelect" multiple></select>
-    <input type="date" id="taskDeadline">
-    <textarea id="taskComment" placeholder="Комментарий"></textarea>
-    <div class="modal-buttons">
-      <button onclick="saveTask()">Сохранить</button>
-      <button onclick="closeTaskModal()">Отмена</button>
-    </div>
+    <span class="close" onclick="closeModal('add-object')">&times;</span>
+    <h3>Добавить объект</h3>
+    <input type="text" id="object-name" placeholder="Название объекта">
+    <textarea id="object-desc" placeholder="Описание"></textarea>
+    <button onclick="addObject()">Сохранить</button>
   </div>
 </div>
 
-<!-- Модальное окно объекта -->
-<div id="projectModal" class="modal">
+<div id="add-task" class="modal">
   <div class="modal-content">
-    <h3>Новый объект</h3>
-    <input id="projectNameInput" placeholder="Название объекта">
-    <div class="modal-buttons">
-      <button onclick="saveProject()">Сохранить</button>
-      <button onclick="closeProjectModal()">Отмена</button>
+    <span class="close" onclick="closeModal('add-task')">&times;</span>
+    <h3>Добавить задачу</h3>
+    <input type="text" id="task-name" placeholder="Название задачи">
+    <select id="task-status">
+      <option value="set">Задано</option>
+      <option value="in_progress">В работе</option>
+      <option value="done">Завершено</option>
+    </select>
+
+    <div class="employee-select">
+      <h4>Выберите сотрудника</h4>
+      <div class="employee-grid-select"></div>
     </div>
+
+    <button onclick="addTask()">Сохранить</button>
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="script.js"></script>
 </body>
-
 </html>
