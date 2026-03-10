@@ -1,115 +1,94 @@
-let projects = JSON.parse(localStorage.getItem("projects")) || [];
-let employees = ["Алексей","Иван","Мария","Сергей","Павел"];
-let currentProject = null;
+// Постоянные сотрудники
+const employees = [
+  {name: "Иван Иванов", role: "Прораб"},
+  {name: "Мария Петрова", role: "Инженер"},
+  {name: "Алексей Борисов", role: "Менеджер"},
+  {name: "Ольга Смирнова", role: "Архитектор"}
+];
 
-// Сохраняем
-function saveData(){localStorage.setItem("projects", JSON.stringify(projects));}
+let selectedEmployee = null;
 
-// Отрисовка сотрудников
-function renderEmployees(){
-  let filter = document.getElementById("employeeFilter");
-  let select = document.getElementById("taskEmployeeSelect");
-  filter.innerHTML = '<option value="all">Все сотрудники</option>';
-  select.innerHTML = '';
-  employees.forEach(emp=>{
-    let opt1 = document.createElement("option"); opt1.value=emp; opt1.innerText=emp; filter.appendChild(opt1);
-    let opt2 = opt1.cloneNode(true); select.appendChild(opt2);
+// Отображение сотрудников на странице
+function renderEmployees() {
+  const grid = document.querySelector('.employee-grid');
+  grid.innerHTML = '';
+  employees.forEach(emp => {
+    const div = document.createElement('div');
+    div.className = 'employee-card';
+    div.innerHTML = `<p>${emp.name}</p><small>${emp.role}</small>`;
+    grid.appendChild(div);
   });
+
+  // Для выбора в модальном окне задачи
+  const selectGrid = document.querySelector('.employee-grid-select');
+  selectGrid.innerHTML = '';
+  employees.forEach(emp => {
+    const div = document.createElement('div');
+    div.className = 'employee-card';
+    div.innerHTML = `<p>${emp.name}</p><small>${emp.role}</small>`;
+    div.onclick = () => selectEmployee(div, emp);
+    selectGrid.appendChild(div);
+  });
+}
+
+function selectEmployee(card, emp){
+  document.querySelectorAll('.employee-grid-select .employee-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedEmployee = emp.name;
 }
 
 // Модальные окна
-function openTaskModal(){document.getElementById("taskModal").style.display="flex";}
-function closeTaskModal(){document.getElementById("taskModal").style.display="none";}
-function openProjectModal(){document.getElementById("projectModal").style.display="flex";}
-function closeProjectModal(){document.getElementById("projectModal").style.display="none";}
+function openModal(id){ document.getElementById(id).style.display='block'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
 
-// Добавляем объект
-function saveProject(){
-  let name=document.getElementById("projectNameInput").value;
+// Объекты
+function addObject(){
+  const name = document.getElementById('object-name').value;
+  const desc = document.getElementById('object-desc').value;
   if(!name) return alert("Введите название объекта");
-  projects.push({name, tasks:[]});
-  currentProject = projects.length-1;
-  saveData(); closeProjectModal(); render();
+  const grid = document.querySelector('.objects-grid');
+  const div = document.createElement('div');
+  div.className='card';
+  div.innerHTML=`<h4>${name}</h4><p>${desc}</p><button class="delete-btn" onclick="deleteCard(this)">×</button>`;
+  grid.appendChild(div);
+  closeModal('add-object');
+  document.getElementById('object-name').value='';
+  document.getElementById('object-desc').value='';
 }
 
-// Отрисовка объектов
-function renderProjects(){
-  let list=document.getElementById("projectList"); list.innerHTML='';
-  projects.forEach((p,i)=>{
-    let li=document.createElement("li"); li.innerText=p.name;
-    li.classList.toggle("active", i===currentProject);
-    li.onclick=()=>{currentProject=i; render();};
-    list.appendChild(li);
-  });
+// Задачи
+function addTask(){
+  const name=document.getElementById('task-name').value;
+  const status=document.getElementById('task-status').value;
+  if(!name) return alert("Введите название задачи");
+  if(!selectedEmployee) return alert("Выберите сотрудника");
+  const grid=document.querySelector('.tasks-grid');
+  const div=document.createElement('div');
+  div.className=`card task-card ${status}`;
+  div.innerHTML=`<h4>${name}</h4>
+  <p>Исполнитель: ${selectedEmployee}</p>
+  <select onchange="updateStatus(this)">
+    <option value="set" ${status==='set'?'selected':''}>Задано</option>
+    <option value="in_progress" ${status==='in_progress'?'selected':''}>В работе</option>
+    <option value="done" ${status==='done'?'selected':''}>Завершено</option>
+  </select>
+  <button class="delete-btn" onclick="deleteCard(this)">×</button>`;
+  grid.appendChild(div);
+  closeModal('add-task');
+  document.getElementById('task-name').value='';
+  selectedEmployee = null;
+  renderEmployees();
 }
 
-// Добавление задачи
-function saveTask(){
-  let title=document.getElementById("taskTitleInput").value;
-  let selected=Array.from(document.getElementById("taskEmployeeSelect").selectedOptions).map(o=>o.value);
-  let deadline=document.getElementById("taskDeadline").value;
-  let comment=document.getElementById("taskComment").value;
-  if(!title) return alert("Введите название задачи");
-  if(selected.length===0) return alert("Выберите сотрудников");
+// Удаление карточек
+function deleteCard(btn){ btn.parentElement.remove(); }
 
-  selected.forEach(emp=>{
-    projects[currentProject].tasks.push({title, employee:emp, deadline, comment, status:"todo"});
-  });
-  saveData(); closeTaskModal(); render();
+// Статус задачи
+function updateStatus(select){
+  const card=select.parentElement;
+  card.classList.remove('set','in_progress','done');
+  card.classList.add(select.value);
 }
 
-// Удаление задачи
-function deleteTask(index){projects[currentProject].tasks.splice(index,1); saveData(); render();}
-
-// Смена статуса
-function changeStatus(index){
-  let task = projects[currentProject].tasks[index];
-  if(task.status==="todo") task.status="progress";
-  else if(task.status==="progress") task.status="done";
-  else task.status="todo";
-  saveData(); render();
-}
-
-// Отрисовка задач
-function renderTasks(){
-  let list=document.getElementById("taskList");
-  list.innerHTML='';
-  if(currentProject===null) return;
-  let filter=document.getElementById("employeeFilter").value;
-  let today=new Date().toISOString().split('T')[0];
-
-  projects[currentProject].tasks.forEach((task,i)=>{
-    if(filter!=="all" && task.employee!==filter) return;
-
-    let li=document.createElement("li");
-    li.className="task-"+task.status;
-    if(task.deadline && task.deadline<today && task.status!=="done") li.classList.add("task-overdue");
-    li.innerHTML=`
-      <div class="task-info">
-        <h4>${task.title}</h4>
-        <small>👷 ${task.employee}</small>
-        <small>📅 ${task.deadline || '—'}</small>
-        <p>${task.comment}</p>
-      </div>
-      <div class="task-buttons">
-        <button class="status" onclick="changeStatus(${i})">Статус</button>
-        <button class="delete" onclick="deleteTask(${i})">Удалить</button>
-      </div>
-    `;
-    list.appendChild(li);
-  });
-}
-
-// Главная отрисовка
-function render(){
-  renderProjects();
-  renderTasks();
-  if(currentProject!==null)
-    document.getElementById("projectTitle").innerText=projects[currentProject].name;
-  else
-    document.getElementById("projectTitle").innerText="Выберите объект";
-}
-
-document.getElementById("employeeFilter").addEventListener("change", render);
-
-renderEmployees(); render();
+// Инициализация сотрудников
+renderEmployees();
