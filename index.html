@@ -17,36 +17,23 @@
       <option value="all">Все сотрудники</option>
     </select>
     <button onclick="openTaskModal()">+ Задача</button>
-    <button onclick="addProject()">+ Объект</button>
+    <button onclick="openProjectModal()">+ Объект</button>
   </div>
 </header>
 
 <div class="container">
   <aside>
-    <h3>Объекты <span>🏢</span></h3>
+    <h3>Объекты 🏢</h3>
     <ul id="projectList"></ul>
   </aside>
 
   <main>
     <h2 id="projectTitle">Выберите объект</h2>
-    <div class="kanban">
-      <div class="column">
-        <h3>To Do</h3>
-        <div id="todo" class="task-container"></div>
-      </div>
-      <div class="column">
-        <h3>In Progress</h3>
-        <div id="progress" class="task-container"></div>
-      </div>
-      <div class="column">
-        <h3>Done</h3>
-        <div id="done" class="task-container"></div>
-      </div>
-    </div>
+    <ul id="taskList" class="task-list"></ul>
   </main>
 </div>
 
-<!-- Модальное окно -->
+<!-- Модальное окно задачи -->
 <div id="taskModal" class="modal">
   <div class="modal-content">
     <h3>Новая задача</h3>
@@ -58,6 +45,18 @@
     <div class="modal-buttons">
       <button onclick="saveTask()">Сохранить</button>
       <button onclick="closeTaskModal()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно объекта -->
+<div id="projectModal" class="modal">
+  <div class="modal-content">
+    <h3>Новый объект</h3>
+    <input id="projectNameInput" placeholder="Название объекта">
+    <div class="modal-buttons">
+      <button onclick="saveProject()">Сохранить</button>
+      <button onclick="closeProjectModal()">Отмена</button>
     </div>
   </div>
 </div>
