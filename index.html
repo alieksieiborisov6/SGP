@@ -6,9 +6,24 @@
 <title>SGP - Управление объектами и задачами</title>
 <link rel="stylesheet" href="style.css">
 
-<!-- Firebase SDK -->
-<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- Firebase SDK через CDN -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDRmT2RygFihWS9OmPNt0SDWTkZlA6-bKM",
+  authDomain: "sgp2026-3184d.firebaseapp.com",
+  projectId: "sgp2026-3184d",
+  storageBucket: "sgp2026-3184d.firebasestorage.app",
+  messagingSenderId: "566527410900",
+  appId: "1:566527410900:web:4ec4cbdf220224c6e0b141",
+  measurementId: "G-WSHB0351M4"
+};
+
+window.app = initializeApp(firebaseConfig);
+window.db = getFirestore(app);
+</script>
 </head>
 <body>
 <header>
