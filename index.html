@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Company Notes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">📘 CompanyBoard</div>
+
+  <div class="filters">
+    <select id="employeeFilter">
+      <option value="all">Все сотрудники</option>
+    </select>
+    <button class="btn small" onclick="openTaskModal()">+ Задача</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Сайдбар объектов -->
+  <aside>
+    <div class="sidebar-header">
+      <h3>Объекты</h3>
+      <button class="btn small" onclick="addProject()">+</button>
+    </div>
+    <ul id="projectList"></ul>
+  </aside>
+
+  <!-- Контент -->
+  <main>
+    <h2 id="currentProjectName"></h2>
+    <div id="taskList" class="task-grid"></div>
+  </main>
+
+</div>
+
+<!-- Модальное окно -->
+<div class="modal" id="taskModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Новая задача</h3>
+      <button class="close" onclick="closeTaskModal()">×</button>
+    </div>
+
+    <input id="taskTitle" placeholder="Название задачи">
+    <div class="employee-select" id="employeeSelect"></div>
+    <input type="date" id="taskDeadline">
+    <textarea id="taskComment" placeholder="Комментарий"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn cancel" onclick="closeTaskModal()">Отмена</button>
+      <button class="btn" onclick="saveTask()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
