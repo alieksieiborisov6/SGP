@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>СТРОЙ ГРАД ПРОЕКТ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="logo.png" alt="Логотип">
+    <h1>СТРОЙ ГРАД ПРОЕКТ</h1>
+  </div>
+  <div class="header-controls">
+    <select id="employeeFilter">
+      <option value="all">Все сотрудники</option>
+    </select>
+    <button onclick="openTaskModal()">+ Задача</button>
+    <button onclick="addProject()">+ Объект</button>
+  </div>
+</header>
+
+<div class="container">
+  <aside>
+    <h3>Объекты <span>🏢</span></h3>
+    <ul id="projectList"></ul>
+  </aside>
+
+  <main>
+    <h2 id="projectTitle">Выберите объект</h2>
+    <div class="kanban">
+      <div class="column">
+        <h3>To Do</h3>
+        <div id="todo" class="task-container"></div>
+      </div>
+      <div class="column">
+        <h3>In Progress</h3>
+        <div id="progress" class="task-container"></div>
+      </div>
+      <div class="column">
+        <h3>Done</h3>
+        <div id="done" class="task-container"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Модальное окно -->
+<div id="taskModal" class="modal">
+  <div class="modal-content">
+    <h3>Новая задача</h3>
+    <input id="taskTitleInput" placeholder="Название задачи">
+    <label>Сотрудники:</label>
+    <select id="taskEmployeeSelect" multiple></select>
+    <input type="date" id="taskDeadline">
+    <textarea id="taskComment" placeholder="Комментарий"></textarea>
+    <div class="modal-buttons">
+      <button onclick="saveTask()">Сохранить</button>
+      <button onclick="closeTaskModal()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
