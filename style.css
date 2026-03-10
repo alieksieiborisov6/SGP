@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background: #f5f5f5;
+    background: #f0f2f5;
     margin: 0;
     padding: 0;
 }
@@ -10,13 +10,13 @@ header {
     color: white;
     padding: 20px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
 header img { height: 50px; }
 
-header .user-filter {
+.user-filter {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -32,81 +32,92 @@ h1,h2,h3 { margin: 10px 0; }
 
 .objects-section, .tasks-section {
     background: #fff;
-    padding: 15px;
-    border-radius: 12px;
+    padding: 20px;
+    border-radius: 15px;
     flex: 1;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.add-btn {
+.add-btn, .save-btn {
     background: #1E90FF;
     color: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     margin-bottom: 10px;
+    transition: 0.2s;
 }
 
-.add-btn:hover { background: #187bcd; }
+.add-btn:hover, .save-btn:hover { background: #187bcd; }
 
-.objects-grid, .tasks-grid { display: grid; gap: 10px; margin-top: 10px; }
+.objects-grid, .tasks-grid { display: grid; gap: 12px; margin-top: 10px; }
 
 .card {
     background: #fff;
-    padding: 12px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     position: relative;
+    cursor: pointer;
 }
 
 .card button.delete-btn {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 8px;
+    right: 8px;
     background: #ff4d4f;
     border: none;
     color: white;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
 }
 
-/* Статусы задач */
 .task-card.set { background: #f0f0f5; }
 .task-card.in_progress { background: #e0f2ff; }
 .task-card.done { background: #e6ffe6; }
 
-/* Модальные окна */
 .modal {
     display: none;
     position: fixed;
     top:0; left:0; width:100%; height:100%;
     background: rgba(0,0,0,0.35);
+    z-index: 10;
 }
 
 .modal-content {
     background: #fff;
     padding: 20px;
     margin: 80px auto;
-    width: 300px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 350px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+textarea { resize: vertical; min-height: 60px; }
 
 .close {
-    float: right;
-    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
     font-size: 22px;
-    font-weight: 600;
-}
-
-input, textarea, select {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    font-weight: bold;
+    cursor: pointer;
 }
