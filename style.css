@@ -14,13 +14,24 @@ header {
     align-items: center;
 }
 
-header img { height: 50px; }
+header img { height: 50px; border-radius: 12px; }
 
 .user-filter {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
+.user-filter select {
+    border-radius: 12px;
+    padding: 8px 12px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.user-filter select:hover { background: #187bcd; color: #fff; }
 
 h1,h2,h3 { margin: 10px 0; }
 
@@ -35,7 +46,8 @@ h1,h2,h3 { margin: 10px 0; }
     padding: 20px;
     border-radius: 15px;
     flex: 1;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transition: 0.2s;
 }
 
 .add-btn, .save-btn {
@@ -46,6 +58,7 @@ h1,h2,h3 { margin: 10px 0; }
     border-radius: 12px;
     cursor: pointer;
     margin-bottom: 10px;
+    font-weight: bold;
     transition: 0.2s;
 }
 
@@ -57,10 +70,13 @@ h1,h2,h3 { margin: 10px 0; }
     background: #fff;
     padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     position: relative;
     cursor: pointer;
+    transition: 0.2s;
 }
+
+.card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
 .card button.delete-btn {
     position: absolute;
@@ -73,11 +89,16 @@ h1,h2,h3 { margin: 10px 0; }
     width: 28px;
     height: 28px;
     cursor: pointer;
+    transition: 0.2s;
 }
+
+.card button.delete-btn:hover { background: #cc3b3f; }
 
 .task-card.set { background: #f0f0f5; }
 .task-card.in_progress { background: #e0f2ff; }
 .task-card.done { background: #e6ffe6; }
+
+.selected-object { border: 2px solid #1E90FF !important; }
 
 .modal {
     display: none;
@@ -85,7 +106,11 @@ h1,h2,h3 { margin: 10px 0; }
     top:0; left:0; width:100%; height:100%;
     background: rgba(0,0,0,0.35);
     z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
+
+.modal.show { display: block; opacity: 1; }
 
 .modal-content {
     background: #fff;
@@ -98,7 +123,11 @@ h1,h2,h3 { margin: 10px 0; }
     display: flex;
     flex-direction: column;
     gap: 10px;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
 }
+
+.modal.show .modal-content { transform: translateY(0); }
 
 .modal-content input,
 .modal-content textarea,
