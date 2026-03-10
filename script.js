@@ -39,13 +39,29 @@ function renderEmployeeDropdown() {
 document.getElementById('current-employee').addEventListener('change', function(){
     currentEmployeeFilter = this.value;
     renderTasks();
+    highlightSelectedEmployee();
 });
 
-// --- Modals ---
-function openModal(id){ document.getElementById(id).style.display='block'; }
-function closeModal(id){ document.getElementById(id).style.display='none'; }
+function highlightSelectedEmployee(){
+    const filterSelect = document.getElementById('current-employee');
+    for(let i=0;i<filterSelect.options.length;i++){
+        if(filterSelect.options[i].value===currentEmployeeFilter){
+            filterSelect.options[i].style.fontWeight='bold';
+        } else { filterSelect.options[i].style.fontWeight='normal'; }
+    }
+}
 
-// --- Сохранение в LocalStorage ---
+// --- Modals ---
+function openModal(id){ 
+    const modal = document.getElementById(id);
+    modal.classList.add('show');
+}
+function closeModal(id){ 
+    const modal = document.getElementById(id);
+    modal.classList.remove('show');
+}
+
+// --- LocalStorage ---
 function saveData(){ localStorage.setItem('objects', JSON.stringify(objects)); }
 
 // --- Объекты ---
@@ -71,8 +87,8 @@ function renderObjects(){
         div.className = 'card';
         div.innerHTML = `<h4>${obj.name}</h4><p>${obj.desc}</p>
         <button class="delete-btn" onclick="deleteObject(${index})">×</button>`;
-        div.onclick = () => openEditObject(index);
-        if(index===selectedObjectIndex) div.style.border='2px solid #1E90FF';
+        div.onclick = () => { selectedObjectIndex=index; renderObjects(); renderTasks(); openEditObject(index); };
+        if(index===selectedObjectIndex) div.classList.add('selected-object');
         grid.appendChild(div);
     });
 }
@@ -192,5 +208,6 @@ function saveTaskEdit(){
 
 // --- Инициализация ---
 renderEmployeeDropdown();
+highlightSelectedEmployee();
 renderObjects();
 renderTasks();
