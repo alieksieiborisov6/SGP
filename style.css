@@ -1,117 +1,29 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f0f2f5;
-    margin: 0;
-    padding: 0;
-}
+body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
 
-header {
-    background: #1E90FF;
-    color: white;
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-}
-
+header { background: #1E90FF; color: white; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; }
 header img { height: 50px; border-radius: 12px; }
 
-.user-filter {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.user-filter select {
-    border-radius: 12px;
-    padding: 8px 12px;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
+.user-filter { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.user-filter select { border-radius: 12px; padding: 8px 12px; border: none; font-size: 14px; cursor: pointer; transition: 0.2s; }
 .user-filter select:hover { background: #187bcd; color: #fff; }
 
 h1,h2,h3 { margin: 10px 0; }
 
-.container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    flex-wrap: wrap;
-}
+.container { display: flex; gap: 20px; padding: 20px; flex-wrap: wrap; }
+.objects-section, .tasks-section { background: #fff; padding: 20px; border-radius: 15px; flex: 1; min-width: 300px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); transition: 0.2s; }
 
-.objects-section, .tasks-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 15px;
-    flex: 1;
-    min-width: 300px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    transition: 0.2s;
-}
-
-.add-btn, .save-btn {
-    background: #1E90FF;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 12px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
+.add-btn, .save-btn { background: #1E90FF; color: white; border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; margin-bottom: 10px; font-weight: bold; transition: 0.2s; }
 .add-btn:hover, .save-btn:hover { background: #187bcd; }
 
 .objects-grid, .tasks-grid { display: grid; gap: 12px; margin-top: 10px; }
-
-.card {
-    background: #fff;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    position: relative;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
+.card { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); position: relative; cursor: pointer; transition: 0.2s; }
 .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
-.card .delete-btn {
-    background: #ff4d4f;
-    border: none;
-    color: white;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
+.card .delete-btn { background: #ff4d4f; border: none; color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; transition: 0.2s; }
 .card .delete-btn:hover { background: #cc3b3f; }
 
-.card-buttons {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.edit-btn {
-    background: #FFA500;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: 0.2s;
-}
-
+.card-buttons { display: flex; gap: 8px; margin-top: 10px; }
+.edit-btn { background: #FFA500; color: white; border: none; padding: 6px 12px; border-radius: 12px; cursor: pointer; font-size: 12px; transition: 0.2s; }
 .edit-btn:hover { background: #cc8400; }
 
 .task-card.set { background: #f0f0f5; }
@@ -121,80 +33,20 @@ h1,h2,h3 { margin: 10px 0; }
 .selected-object { border: 2px solid #1E90FF !important; }
 .selected-task { border: 2px solid #FFA500 !important; }
 
-.modal {
-    display: none;
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.35);
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
+.modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.35); z-index: 10; opacity: 0; transition: opacity 0.3s ease; }
 .modal.show { display: block; opacity: 1; }
 
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    margin: 80px auto;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-}
-
+.modal-content { background: #fff; padding: 20px; margin: 80px auto; width: 90%; max-width: 400px; border-radius: 15px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column; gap: 10px; transform: translateY(-20px); transition: transform 0.3s ease; }
 .modal.show .modal-content { transform: translateY(0); }
 
-.modal-content input,
-.modal-content textarea,
-.modal-content select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
+.modal-content input, .modal-content textarea, .modal-content select { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box; }
 textarea { resize: vertical; min-height: 60px; }
+.close { position: absolute; top: 10px; right: 15px; font-size: 22px; font-weight: bold; cursor: pointer; }
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-}
+@media screen and (max-width: 768px) { .container { flex-direction: column; } }
 
-@media screen and (max-width: 768px) {
-    .container { flex-direction: column; }
-}
-
-/* --- Кастомные кнопки статуса и сотрудников --- */
-.status-btn-group, .employee-btn-group {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin: 5px 0;
-}
-
-.status-btn, .employee-btn {
-    padding: 6px 12px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    font-size: 12px;
-    transition: 0.2s;
-    background: #fff;
-}
-
+.status-btn-group, .employee-btn-group { display: flex; gap: 5px; flex-wrap: wrap; margin: 5px 0; }
+.status-btn, .employee-btn { padding: 6px 12px; border-radius: 12px; border: 1px solid #ccc; cursor: pointer; font-size: 12px; transition: 0.2s; background: #fff; }
 .status-btn.active { border-color: #1E90FF; background: #1E90FF; color: #fff; }
 .employee-btn.active { border-color: #FFA500; background: #FFA500; color: #fff; }
 .status-btn:hover, .employee-btn:hover { opacity: 0.85; }
