@@ -1,176 +1,170 @@
-const employees = [
-  {name: "Иван Иванов", role: "Прораб"},
-  {name: "Мария Петрова", role: "Инженер"},
-  {name: "Алексей Борисов", role: "Менеджер"},
-  {name: "Ольга Смирнова", role: "Архитектор"}
-];
+// Firebase init
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore"; 
 
-let objects = JSON.parse(localStorage.getItem('objects')) || [];
+const firebaseConfig = {
+  apiKey: "AIzaSyDRmT2RygFihWS9OmPNt0SDWTkZlA6-bKM",
+  authDomain: "sgp2026-3184d.firebaseapp.com",
+  projectId: "sgp2026-3184d",
+  storageBucket: "sgp2026-3184d.firebasestorage.app",
+  messagingSenderId: "566527410900",
+  appId: "1:566527410900:web:4ec4cbdf220224c6e0b141",
+  measurementId: "G-WSHB0351M4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Данные
+let objects = [];
+const employees = [
+    {name:"Иван Иванов", role:"Менеджер"},
+    {name:"Мария Петрова", role:"Инженер"},
+    {name:"Сергей Смирнов", role:"Рабочий"}
+];
 let selectedObjectIndex = null;
-let selectedTaskIndex = null;
-let currentEmployeeFilter = "all";
-let editObjectIndex = null;
 let editTaskIndex = null;
 
-function saveData(){ localStorage.setItem('objects', JSON.stringify(objects)); }
+// -------------------- MODALS --------------------
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
 
-function renderEmployeeDropdown() {
-    const taskSelect = document.getElementById('task-employee');
-    taskSelect.innerHTML = '';
-    employees.forEach(emp => {
+// -------------------- RENDER EMPLOYEES --------------------
+function renderEmployeeDropdown(selectId){
+    const select = document.getElementById(selectId);
+    select.innerHTML = '';
+    employees.forEach(emp=>{
         const option = document.createElement('option');
         option.value = emp.name;
         option.textContent = `${emp.name} (${emp.role})`;
-        taskSelect.appendChild(option);
-    });
-
-    const filterSelect = document.getElementById('current-employee');
-    filterSelect.innerHTML = '';
-    const allOption = document.createElement('option');
-    allOption.value = "all";
-    allOption.textContent = "Все сотрудники";
-    filterSelect.appendChild(allOption);
-    employees.forEach(emp => {
-        const option = document.createElement('option');
-        option.value = emp.name;
-        option.textContent = emp.name;
-        filterSelect.appendChild(option);
+        select.appendChild(option);
     });
 }
-document.getElementById('current-employee').addEventListener('change', function(){
-    currentEmployeeFilter = this.value;
-    renderTasks();
-});
 
-function openModal(id){ document.getElementById(id).classList.add('show'); }
-function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-
-// --- Объекты ---
-function addObject(){
+// -------------------- OBJECTS --------------------
+async function addObject(){
     const name = document.getElementById('object-name').value;
     const desc = document.getElementById('object-desc').value;
     if(!name) return alert("Введите название объекта");
-    objects.push({name, desc, tasks: []});
-    selectedObjectIndex = objects.length-1;
-    saveData(); renderObjects(); renderTasks(); closeModal('add-object');
-    document.getElementById('object-name').value=''; document.getElementById('object-desc').value='';
+    await addDoc(collection(db,"objects"), { name, desc, createdAt: new Date() });
+    document.getElementById('object-name').value='';
+    document.getElementById('object-desc').value='';
+    closeModal('add-object');
+    loadObjects();
+}
+
+async function loadObjects(){
+    const q = query(collection(db,"objects"), orderBy("createdAt"));
+    const snapshot = await getDocs(q);
+    objects = [];
+    snapshot.forEach(docSnap => {
+        objects.push({...docSnap.data(), id: docSnap.id, tasks: []});
+    });
+    renderObjects();
+    for(let i=0;i<objects.length;i++) await loadTasksForObject(objects[i].id,i);
 }
 
 function renderObjects(){
     const grid = document.querySelector('.objects-grid');
-    grid.innerHTML = '';
-    objects.forEach((obj,index)=>{
+    grid.innerHTML='';
+    objects.forEach((obj,i)=>{
         const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `<h4>${obj.name}</h4><p>${obj.desc}</p>
-        <div class="card-buttons">
-        <button class="edit-btn" onclick="openEditObject(${index}); event.stopPropagation();">Редактировать</button>
-        <button class="delete-btn" onclick="deleteObject(${index}); event.stopPropagation();">×</button></div>`;
-        div.onclick = ()=>{selectedObjectIndex=index; selectedTaskIndex=null; renderObjects(); renderTasks();};
-        if(index===selectedObjectIndex) div.classList.add('selected-object');
+        div.className='card object-card';
+        div.innerHTML=`<h4>${obj.name}</h4><p>${obj.desc}</p>`;
+        div.onclick=()=>{selectedObjectIndex=i; renderTasks();};
         grid.appendChild(div);
     });
 }
 
-function deleteObject(index){ objects.splice(index,1); selectedObjectIndex=null; saveData(); renderObjects(); renderTasks(); }
-function openEditObject(index){ editObjectIndex=index; document.getElementById('edit-object-name').value=objects[index].name; document.getElementById('edit-object-desc').value=objects[index].desc; openModal('edit-object'); }
-function saveObjectEdit(){ if(editObjectIndex===null) return; const name=document.getElementById('edit-object-name').value; const desc=document.getElementById('edit-object-desc').value; if(!name) return alert("Введите название объекта"); objects[editObjectIndex].name=name; objects[editObjectIndex].desc=desc; saveData(); renderObjects(); closeModal('edit-object'); }
-
-// --- Задачи ---
-function renderEditTaskEmployeeDropdown(){
-    const select = document.getElementById('edit-task-employee'); select.innerHTML='';
-    employees.forEach(emp=>{ const option=document.createElement('option'); option.value=emp.name; option.textContent=`${emp.name} (${emp.role})`; select.appendChild(option); });
-}
-
-function addTask(){
+// -------------------- TASKS --------------------
+async function addTask(){
     if(selectedObjectIndex===null) return alert("Выберите объект");
     const name=document.getElementById('task-name').value;
     const desc=document.getElementById('task-desc').value;
     const status=document.getElementById('task-status').value;
     const employee=document.getElementById('task-employee').value;
     if(!name) return alert("Введите название задачи");
-    objects[selectedObjectIndex].tasks.push({name,desc,status,employee});
-    saveData(); renderTasks(); closeModal('add-task'); document.getElementById('task-name').value=''; document.getElementById('task-desc').value='';
+
+    const objId = objects[selectedObjectIndex].id;
+    await addDoc(collection(db,"objects",objId,"tasks"),{name,desc,status,employee,createdAt:new Date()});
+    document.getElementById('task-name').value='';
+    document.getElementById('task-desc').value='';
+    closeModal('add-task');
+    loadObjects();
 }
 
-function renderStatusButtons(taskIndex){
-    const container=document.createElement('div'); container.className='status-btn-group';
-    ['set','in_progress','done'].forEach(status=>{ const btn=document.createElement('button'); btn.className='status-btn'; if(objects[selectedObjectIndex].tasks[taskIndex].status===status) btn.classList.add('active'); btn.textContent=status==='set'?'Задано':status==='in_progress'?'В работе':'Завершено'; btn.onclick=()=>{ objects[selectedObjectIndex].tasks[taskIndex].status=status; saveData(); renderTasks(); }; container.appendChild(btn); });
-    return container;
-}
-
-function renderEmployeeButtons(taskIndex){
-    const container=document.createElement('div'); container.className='employee-btn-group';
-    employees.forEach(emp=>{ const btn=document.createElement('button'); btn.className='employee-btn'; if(objects[selectedObjectIndex].tasks[taskIndex].employee===emp.name) btn.classList.add('active'); btn.textContent=emp.name; btn.onclick=()=>{ objects[selectedObjectIndex].tasks[taskIndex].employee=emp.name; saveData(); renderTasks(); }; container.appendChild(btn); });
-    return container;
+async function loadTasksForObject(objectId,objIndex){
+    const tasksCol = collection(db,"objects",objectId,"tasks");
+    const q = query(tasksCol, orderBy("createdAt"));
+    const snapshot = await getDocs(q);
+    objects[objIndex].tasks=[];
+    snapshot.forEach(docSnap=>{
+        objects[objIndex].tasks.push({...docSnap.data(), id: docSnap.id});
+    });
+    if(selectedObjectIndex===objIndex) renderTasks();
 }
 
 function renderTasks(){
-    const grid = document.querySelector('.tasks-grid'); 
-    grid.innerHTML = '';
+    const grid = document.querySelector('.tasks-grid');
+    grid.innerHTML='';
     if(selectedObjectIndex===null) return;
-
-    const tasks = objects[selectedObjectIndex].tasks.filter(
-        t => currentEmployeeFilter==='all' || t.employee===currentEmployeeFilter
-    );
-
-    tasks.forEach((task,index)=>{
-        const div = document.createElement('div'); 
-        div.className = `card task-card ${task.status}`; 
-
-        // Показываем название, описание и сотрудника как текст
-        div.innerHTML = `
+    objects[selectedObjectIndex].tasks.forEach((task,i)=>{
+        const div=document.createElement('div');
+        div.className=`card task-card ${task.status}`;
+        div.innerHTML=`
             <h4>${task.name}</h4>
             <p>${task.desc}</p>
             <p class="task-employee">Сотрудник: ${task.employee}</p>
         `;
-
-        // Статус оставляем кнопками
-        div.appendChild(renderStatusButtons(index));
-
-        // Редактировать / удалить
-        const buttons = document.createElement('div'); 
-        buttons.className = 'card-buttons';
-        buttons.innerHTML = `
-            <button class="edit-btn" onclick="openEditTask(${index}); event.stopPropagation();">Редактировать</button>
-            <button class="delete-btn" onclick="deleteTask(${index}); event.stopPropagation();">×</button>
+        const buttons = document.createElement('div');
+        buttons.className='card-buttons';
+        buttons.innerHTML=`
+            <button class="edit-btn" onclick="openEditTask(${i}); event.stopPropagation();">Редактировать</button>
+            <button class="delete-btn" onclick="deleteTask(${i}); event.stopPropagation();">×</button>
         `;
         div.appendChild(buttons);
-
-        // Клик для выделения задачи
-        div.onclick = ()=>{selectedTaskIndex=index; highlightSelectedTask();};
-        if(index===selectedTaskIndex) div.classList.add('selected-task');
         grid.appendChild(div);
     });
 }
 
-function openEditTask(index){
-    editTaskIndex=index;
-    const task=objects[selectedObjectIndex].tasks[index];
-    document.getElementById('edit-task-name').value=task.name;
-    document.getElementById('edit-task-desc').value=task.desc;
-    document.getElementById('edit-task-status').value=task.status;
-    renderEditTaskEmployeeDropdown();
-    document.getElementById('edit-task-employee').value=task.employee;
+// -------------------- EDIT TASK --------------------
+function openEditTask(i){
+    editTaskIndex=i;
+    const task = objects[selectedObjectIndex].tasks[i];
+    document.getElementById('edit-task-name').value = task.name;
+    document.getElementById('edit-task-desc').value = task.desc;
+    document.getElementById('edit-task-status').value = task.status;
+    renderEmployeeDropdown('edit-task-employee');
+    document.getElementById('edit-task-employee').value = task.employee;
     openModal('edit-task');
 }
 
-function saveTaskEdit(){
+async function saveTaskEdit(){
     if(editTaskIndex===null) return;
-    const task=objects[selectedObjectIndex].tasks[editTaskIndex];
-    task.name=document.getElementById('edit-task-name').value;
-    task.desc=document.getElementById('edit-task-desc').value;
-    task.status=document.getElementById('edit-task-status').value;
-    task.employee=document.getElementById('edit-task-employee').value;
-    saveData();
-    renderTasks();
+    const task = objects[selectedObjectIndex].tasks[editTaskIndex];
+    const objId = objects[selectedObjectIndex].id;
+    const taskId = task.id;
+    const ref = doc(db,"objects",objId,"tasks",taskId);
+    await updateDoc(ref,{
+        name: document.getElementById('edit-task-name').value,
+        desc: document.getElementById('edit-task-desc').value,
+        status: document.getElementById('edit-task-status').value,
+        employee: document.getElementById('edit-task-employee').value
+    });
     closeModal('edit-task');
+    loadObjects();
 }
 
-function deleteTask(index){ objects[selectedObjectIndex].tasks.splice(index,1); selectedTaskIndex=null; saveData(); renderTasks(); }
+// -------------------- DELETE TASK --------------------
+async function deleteTask(i){
+    if(!confirm("Удалить задачу?")) return;
+    const task = objects[selectedObjectIndex].tasks[i];
+    const objId = objects[selectedObjectIndex].id;
+    const taskId = task.id;
+    await deleteDoc(doc(db,"objects",objId,"tasks",taskId));
+    loadObjects();
+}
 
-function highlightSelectedTask(){ renderTasks(); }
-
-renderEmployeeDropdown(); renderObjects(); renderTasks();
-
-
+// -------------------- INIT --------------------
+renderEmployeeDropdown('task-employee');
+loadObjects();
