@@ -10,6 +10,7 @@ header {
     color: white;
     padding: 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 }
@@ -20,6 +21,7 @@ header img { height: 50px; border-radius: 12px; }
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .user-filter select {
@@ -39,6 +41,7 @@ h1,h2,h3 { margin: 10px 0; }
     display: flex;
     gap: 20px;
     padding: 20px;
+    flex-wrap: wrap;
 }
 
 .objects-section, .tasks-section {
@@ -46,6 +49,7 @@ h1,h2,h3 { margin: 10px 0; }
     padding: 20px;
     border-radius: 15px;
     flex: 1;
+    min-width: 300px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     transition: 0.2s;
 }
@@ -78,10 +82,7 @@ h1,h2,h3 { margin: 10px 0; }
 
 .card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
-.card button.delete-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+.card .delete-btn {
     background: #ff4d4f;
     border: none;
     color: white;
@@ -92,13 +93,33 @@ h1,h2,h3 { margin: 10px 0; }
     transition: 0.2s;
 }
 
-.card button.delete-btn:hover { background: #cc3b3f; }
+.card .delete-btn:hover { background: #cc3b3f; }
+
+.card-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.edit-btn {
+    background: #FFA500;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.edit-btn:hover { background: #cc8400; }
 
 .task-card.set { background: #f0f0f5; }
 .task-card.in_progress { background: #e0f2ff; }
 .task-card.done { background: #e6ffe6; }
 
 .selected-object { border: 2px solid #1E90FF !important; }
+.selected-task { border: 2px solid #FFA500 !important; }
 
 .modal {
     display: none;
@@ -116,7 +137,8 @@ h1,h2,h3 { margin: 10px 0; }
     background: #fff;
     padding: 20px;
     margin: 80px auto;
-    width: 350px;
+    width: 90%;
+    max-width: 400px;
     border-radius: 15px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     position: relative;
@@ -150,3 +172,29 @@ textarea { resize: vertical; min-height: 60px; }
     font-weight: bold;
     cursor: pointer;
 }
+
+@media screen and (max-width: 768px) {
+    .container { flex-direction: column; }
+}
+
+/* --- Кастомные кнопки статуса и сотрудников --- */
+.status-btn-group, .employee-btn-group {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin: 5px 0;
+}
+
+.status-btn, .employee-btn {
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+    background: #fff;
+}
+
+.status-btn.active { border-color: #1E90FF; background: #1E90FF; color: #fff; }
+.employee-btn.active { border-color: #FFA500; background: #FFA500; color: #fff; }
+.status-btn:hover, .employee-btn:hover { opacity: 0.85; }
