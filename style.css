@@ -1,95 +1,36 @@
-body {
-  margin:0;
-  font-family:'Arial',sans-serif;
-  background:#f5f6fa;
-  color:#333;
-}
+/* Общие стили */
+body { font-family: Arial, sans-serif; background: #f9f9f9; margin:0; padding:0; }
+header { background:#1E90FF; color:white; padding:15px 20px; display:flex; align-items:center; }
+header .logo { display:flex; align-items:center; gap:15px; }
+header img { height:50px; }
+h1,h2,h3,h4 { margin:10px 0; }
+main { padding:20px; }
+section { margin-bottom:40px; }
+.add-btn { background:#1E90FF; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; margin-bottom:10px; }
+.add-btn:hover { background:#187bcd; }
 
-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 30px;
-  background:#004d99;
-  color:white;
-}
+/* Сетки */
+.objects-grid, .tasks-grid, .employees-grid, .employee-grid-select { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:10px; }
 
-.logo {display:flex; align-items:center; gap:10px;}
-.logo img {width:50px;}
-.header-controls select, .header-controls button {
-  margin-left:10px;
-  padding:6px 10px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-}
-.header-controls button {background:#ff9800; color:white;}
+/* Карточки */
+.card { background:white; padding:15px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); position:relative; }
+.card button.delete-btn { position:absolute; top:10px; right:10px; background:red; border:none; color:white; border-radius:50%; width:25px; height:25px; cursor:pointer; }
+.card button.delete-btn:hover { background:#cc0000; }
 
-.container {display:flex; height:calc(100vh - 70px);}
+/* Статусы задач */
+.task-card.set { background-color: #f0f0f0; }
+.task-card.in_progress { background-color: #cce5ff; }
+.task-card.done { background-color: #d4edda; }
 
-aside {
-  width:220px;
-  background:#e3f2fd;
-  padding:20px;
-  border-right:1px solid #ccc;
-}
+/* Модальные окна */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
+.modal-content { background:#fff; padding:20px; margin:100px auto; width:300px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.2); }
+.close { float:right; cursor:pointer; font-size:20px; }
+input, textarea, select { width:100%; padding:8px; margin:5px 0; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
+button { cursor:pointer; }
 
-#projectList {list-style:none; padding:0;}
-#projectList li {
-  padding:10px;
-  margin-bottom:5px;
-  background:#bbdefb;
-  border-radius:6px;
-  cursor:pointer;
-  display:flex; justify-content:space-between; align-items:center;
-}
-#projectList li:hover, #projectList li.active {background:#90caf9;}
-
-main {flex:1; padding:20px;}
-h2 {margin-top:0;}
-
-.task-list {list-style:none; padding:0;}
-.task-list li {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:10px;
-  border-radius:6px;
-  margin-bottom:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.15);
-  color:white;
-}
-.task-todo {background:#2196f3;}
-.task-progress {background:#ff9800;}
-.task-done {background:#4caf50;}
-.task-overdue {border-left:4px solid red;}
-
-.task-info {flex:1;}
-.task-info h4 {margin:0 0 3px 0;}
-.task-info small {display:block; font-size:12px;}
-
-.task-buttons button {
-  margin-left:5px;
-  border:none;
-  border-radius:4px;
-  padding:5px 8px;
-  cursor:pointer;
-  font-size:12px;
-}
-.task-buttons .delete {background:#f44336; color:white;}
-.task-buttons .status {background:#333; color:white;}
-
-.modal {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.4);
-  justify-content:center; align-items:center;
-}
-
-.modal-content {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:320px;
-  display:flex; flex-direction:column; gap:10px;
-}
+/* Карточки сотрудников */
+.employee-card { background:white; padding:10px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); cursor:pointer; transition:0.2s; text-align:center; }
+.employee-card:hover { transform: translateY(-3px); box-shadow:0 4px 10px rgba(0,0,0,0.15); }
+.employee-card.selected { border: 2px solid #1E90FF; background:#e6f0ff; }
+.employee-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:10px; margin-top:10px; }
