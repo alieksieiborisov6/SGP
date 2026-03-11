@@ -2,37 +2,55 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" href="logo.jpg" type="image/x-icon">
-<title>SGP Управление объектами</title>
+<title>SGP Manager</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-<h1>SGP Управление объектами</h1>
+
+<h1>SGP Manager</h1>
+
+<select id="employeeFilter">
+<option value="all">Все сотрудники</option>
+<option>Иван</option>
+<option>Алексей</option>
+<option>Сергей</option>
+<option>Дмитрий</option>
+</select>
+
 </header>
+
 
 <div class="container">
 
-<div class="left-panel">
+<div class="objects">
+
+<div class="top-bar">
 
 <h2>Объекты</h2>
 
-<button onclick="openModal('add-object')">Добавить объект</button>
+<button onclick="openModal('objectModal')">+ Объект</button>
 
-<div class="objects-grid"></div>
+</div>
+
+<div id="objectsList"></div>
 
 </div>
 
 
-<div class="right-panel">
+<div class="tasks">
+
+<div class="top-bar">
 
 <h2>Задачи</h2>
 
-<button onclick="openModal('add-task')">Добавить задачу</button>
+<button onclick="openModal('taskModal')">+ Задача</button>
 
-<div class="tasks-grid"></div>
+</div>
+
+<div id="tasksList"></div>
 
 </div>
 
@@ -41,19 +59,19 @@
 
 <!-- МОДАЛКА ОБЪЕКТА -->
 
-<div id="add-object" class="modal">
+<div id="objectModal" class="modal">
 
 <div class="modal-content">
 
-<span onclick="closeModal('add-object')" class="close">×</span>
+<h3>Создать объект</h3>
 
-<h3>Добавить объект</h3>
+<input id="objectName" placeholder="Название">
 
-<input id="object-name" placeholder="Название объекта">
+<textarea id="objectDesc" placeholder="Описание"></textarea>
 
-<textarea id="object-desc" placeholder="Описание"></textarea>
+<button onclick="createObject()">Создать</button>
 
-<button onclick="addObject()">Сохранить</button>
+<button onclick="closeModal('objectModal')">Отмена</button>
 
 </div>
 
@@ -62,26 +80,43 @@
 
 <!-- МОДАЛКА ЗАДАЧИ -->
 
-<div id="add-task" class="modal">
+<div id="taskModal" class="modal">
 
 <div class="modal-content">
 
-<span onclick="closeModal('add-task')" class="close">×</span>
+<h3>Создать задачу</h3>
 
-<h3>Добавить задачу</h3>
+<input id="taskName" placeholder="Название">
 
-<input id="task-name" placeholder="Название задачи">
+<textarea id="taskDesc" placeholder="Описание"></textarea>
 
-<textarea id="task-desc" placeholder="Описание"></textarea>
+<select id="taskEmployee">
 
-<button onclick="addTask()">Сохранить</button>
+<option>Иван</option>
+<option>Алексей</option>
+<option>Сергей</option>
+<option>Дмитрий</option>
+
+</select>
+
+<select id="taskStatus">
+
+<option>Задано</option>
+<option>В работе</option>
+<option>Завершено</option>
+
+</select>
+
+<button onclick="createTask()">Создать</button>
+
+<button onclick="closeModal('taskModal')">Отмена</button>
 
 </div>
 
 </div>
+
 
 <script src="script.js"></script>
 
 </body>
 </html>
-
