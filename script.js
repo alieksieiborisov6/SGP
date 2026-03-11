@@ -23,6 +23,8 @@ window.saveObject=function(){
 const name=document.getElementById("objectName").value
 const desc=document.getElementById("objectDesc").value
 
+if(!name) return
+
 if(editingObject!==null){
 
 objects[editingObject].name=name
@@ -40,7 +42,11 @@ tasks:[]
 
 editingObject=null
 
+document.getElementById("objectName").value=""
+document.getElementById("objectDesc").value=""
+
 save()
+
 renderObjects()
 
 closeModal("objectModal")
@@ -90,13 +96,13 @@ card.innerHTML=`
 
 <p>${obj.desc}</p>
 
-<button onclick="editObject(${i})">Редактировать</button>
+<button onclick="event.stopPropagation();editObject(${i})">Редактировать</button>
 
-<button onclick="deleteObject(${i})">Удалить</button>
+<button onclick="event.stopPropagation();deleteObject(${i})">Удалить</button>
 
 `
 
-card.onclick=()=>{
+card.onclick=function(){
 selectedObject=i
 renderTasks()
 }
@@ -121,7 +127,7 @@ const deadline=document.getElementById("taskDeadline").value
 
 if(editingTask!==null){
 
-const task=objects[selectedObject].tasks[editingTask]
+let task=objects[selectedObject].tasks[editingTask]
 
 task.name=name
 task.desc=desc
@@ -142,11 +148,25 @@ status:"Задано"
 
 editingTask=null
 
+document.getElementById("taskName").value=""
+document.getElementById("taskDesc").value=""
+document.getElementById("taskDeadline").value=""
+
 save()
 
 renderTasks()
 
 closeModal("taskModal")
+
+}
+
+window.changeStatus=function(index,status){
+
+objects[selectedObject].tasks[index].status=status
+
+save()
+
+renderTasks()
 
 }
 
@@ -175,16 +195,6 @@ renderTasks()
 
 }
 
-window.changeStatus=function(index,status){
-
-objects[selectedObject].tasks[index].status=status
-
-save()
-
-renderTasks()
-
-}
-
 function renderTasks(){
 
 if(selectedObject===null || !objects[selectedObject]) return
@@ -199,9 +209,14 @@ objects[selectedObject].tasks.forEach((task,i)=>{
 
 if(filter!="all" && task.employee!=filter) return
 
+let statusClass="zadano"
+
+if(task.status=="В работе") statusClass="work"
+if(task.status=="Завершено") statusClass="done"
+
 const card=document.createElement("div")
 
-card.className="card"
+card.className="card "+statusClass
 
 card.innerHTML=`
 
@@ -214,9 +229,11 @@ card.innerHTML=`
 <p>📅 ${task.deadline || "-"}</p>
 
 <select onchange="changeStatus(${i},this.value)">
+
 <option ${task.status=="Задано"?"selected":""}>Задано</option>
 <option ${task.status=="В работе"?"selected":""}>В работе</option>
 <option ${task.status=="Завершено"?"selected":""}>Завершено</option>
+
 </select>
 
 <br>
