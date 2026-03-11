@@ -1,40 +1,44 @@
 let objects = JSON.parse(localStorage.getItem("objects")) || []
 
-let selectedObject = null
+let selectedObject=null
+let editingObject=null
+let editingTask=null
 
-const employeeFilter = document.getElementById("employeeFilter")
-
+const employeeFilter=document.getElementById("employeeFilter")
 
 function save(){
 localStorage.setItem("objects",JSON.stringify(objects))
 }
 
-
 window.openModal=function(id){
 document.getElementById(id).style.display="flex"
 }
-
 
 window.closeModal=function(id){
 document.getElementById(id).style.display="none"
 }
 
-
-window.createObject=function(){
+window.saveObject=function(){
 
 const name=document.getElementById("objectName").value
 const desc=document.getElementById("objectDesc").value
 
-if(!name){
-alert("Введите название объекта")
-return
-}
+if(editingObject!==null){
+
+objects[editingObject].name=name
+objects[editingObject].desc=desc
+
+}else{
 
 objects.push({
-name:name,
-desc:desc,
+name,
+desc,
 tasks:[]
 })
+
+}
+
+editingObject=null
 
 save()
 renderObjects()
@@ -43,10 +47,22 @@ closeModal("objectModal")
 
 }
 
+window.editObject=function(index){
+
+editingObject=index
+
+document.getElementById("objectName").value=objects[index].name
+document.getElementById("objectDesc").value=objects[index].desc
+
+openModal("objectModal")
+
+}
 
 window.deleteObject=function(index){
 
 objects.splice(index,1)
+
+selectedObject=null
 
 save()
 
@@ -55,7 +71,6 @@ renderObjects()
 document.getElementById("tasksList").innerHTML=""
 
 }
-
 
 function renderObjects(){
 
@@ -72,17 +87,18 @@ card.className="card"
 card.innerHTML=`
 
 <b>${obj.name}</b>
+
 <p>${obj.desc}</p>
+
+<button onclick="editObject(${i})">Редактировать</button>
 
 <button onclick="deleteObject(${i})">Удалить</button>
 
 `
 
 card.onclick=()=>{
-
 selectedObject=i
 renderTasks()
-
 }
 
 list.appendChild(card)
@@ -91,33 +107,63 @@ list.appendChild(card)
 
 }
 
-
-window.createTask=function(){
+window.saveTask=function(){
 
 if(selectedObject===null){
-alert("Сначала выберите объект")
+alert("Выберите объект")
 return
 }
 
 const name=document.getElementById("taskName").value
 const desc=document.getElementById("taskDesc").value
 const employee=document.getElementById("taskEmployee").value
-const status=document.getElementById("taskStatus").value
+const deadline=document.getElementById("taskDeadline").value
+
+if(editingTask!==null){
+
+const task=objects[selectedObject].tasks[editingTask]
+
+task.name=name
+task.desc=desc
+task.employee=employee
+task.deadline=deadline
+
+}else{
 
 objects[selectedObject].tasks.push({
-name:name,
-desc:desc,
-employee:employee,
-status:status
+name,
+desc,
+employee,
+deadline,
+status:"Задано"
 })
 
+}
+
+editingTask=null
+
 save()
+
 renderTasks()
 
 closeModal("taskModal")
 
 }
 
+window.editTask=function(index){
+
+editingTask=index
+
+const task=objects[selectedObject].tasks[index]
+
+document.getElementById("taskName").value=task.name
+document.getElementById("taskDesc").value=task.desc
+document.getElementById("taskEmployee").value=task.employee
+document.getElementById("taskDeadline").value=task.deadline
+
+openModal("taskModal")
+
+}
 
 window.deleteTask=function(index){
 
@@ -129,20 +175,27 @@ renderTasks()
 
 }
 
+window.changeStatus=function(index,status){
+
+objects[selectedObject].tasks[index].status=status
+
+save()
+
+renderTasks()
+
+}
 
 function renderTasks(){
 
-if(selectedObject===null) return
+if(selectedObject===null || !objects[selectedObject]) return
 
 const list=document.getElementById("tasksList")
 
 list.innerHTML=""
 
-let tasks=objects[selectedObject].tasks
-
 const filter=employeeFilter.value
 
-tasks.forEach((task,i)=>{
+objects[selectedObject].tasks.forEach((task,i)=>{
 
 if(filter!="all" && task.employee!=filter) return
 
@@ -158,7 +211,17 @@ card.innerHTML=`
 
 <p>👷 ${task.employee}</p>
 
-<p>📊 ${task.status}</p>
+<p>📅 ${task.deadline || "-"}</p>
+
+<select onchange="changeStatus(${i},this.value)">
+<option ${task.status=="Задано"?"selected":""}>Задано</option>
+<option ${task.status=="В работе"?"selected":""}>В работе</option>
+<option ${task.status=="Завершено"?"selected":""}>Завершено</option>
+</select>
+
+<br>
+
+<button onclick="editTask(${i})">Редактировать</button>
 
 <button onclick="deleteTask(${i})">Удалить</button>
 
@@ -170,10 +233,8 @@ list.appendChild(card)
 
 }
 
-
 employeeFilter.onchange=function(){
 renderTasks()
 }
-
 
 renderObjects()
