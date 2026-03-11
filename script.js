@@ -2,88 +2,103 @@ let objects = JSON.parse(localStorage.getItem("objects")) || []
 
 let selectedObject = null
 
+const employeeFilter = document.getElementById("employeeFilter")
 
-function saveData(){
+
+function save(){
 
 localStorage.setItem("objects",JSON.stringify(objects))
 
 }
 
 
-window.openModal=function(id){
+function openModal(id){
 
 document.getElementById(id).style.display="flex"
 
 }
 
 
-window.closeModal=function(id){
+function closeModal(id){
 
 document.getElementById(id).style.display="none"
 
 }
 
 
-window.addObject=function(){
+function createObject(){
 
-const name=document.getElementById("object-name").value
-const desc=document.getElementById("object-desc").value
-
-if(!name){
-
-alert("Введите название")
-
-return
-
-}
+const name=document.getElementById("objectName").value
+const desc=document.getElementById("objectDesc").value
 
 objects.push({
 
-name:name,
-desc:desc,
+name,
+desc,
 tasks:[]
 
 })
 
-saveData()
+save()
 
 renderObjects()
 
-closeModal("add-object")
+closeModal("objectModal")
+
+}
+
+
+function deleteObject(index){
+
+objects.splice(index,1)
+
+save()
+
+renderObjects()
+
+document.getElementById("tasksList").innerHTML=""
 
 }
 
 
 function renderObjects(){
 
-const container=document.querySelector(".objects-grid")
+const list=document.getElementById("objectsList")
 
-container.innerHTML=""
+list.innerHTML=""
 
-objects.forEach((obj,index)=>{
+objects.forEach((obj,i)=>{
 
 const card=document.createElement("div")
 
 card.className="card"
 
-card.innerHTML=`<h4>${obj.name}</h4><p>${obj.desc}</p>`
+card.innerHTML=`
 
-card.onclick=function(){
+<b>${obj.name}</b>
 
-selectedObject=index
+<p>${obj.desc}</p>
+
+<button onclick="deleteObject(${i})">Удалить</button>
+
+`
+
+card.onclick=()=>{
+
+selectedObject=i
 
 renderTasks()
 
 }
 
-container.appendChild(card)
+list.appendChild(card)
 
 })
 
 }
 
 
-window.addTask=function(){
+function createTask(){
 
 if(selectedObject===null){
 
@@ -93,34 +108,53 @@ return
 
 }
 
-const name=document.getElementById("task-name").value
-const desc=document.getElementById("task-desc").value
+const name=document.getElementById("taskName").value
+const desc=document.getElementById("taskDesc").value
+const employee=document.getElementById("taskEmployee").value
+const status=document.getElementById("taskStatus").value
 
 objects[selectedObject].tasks.push({
 
-name:name,
-desc:desc
+name,
+desc,
+employee,
+status
 
 })
 
-saveData()
+save()
 
 renderTasks()
 
-closeModal("add-task")
+closeModal("taskModal")
+
+}
+
+
+function deleteTask(index){
+
+objects[selectedObject].tasks.splice(index,1)
+
+save()
+
+renderTasks()
 
 }
 
 
 function renderTasks(){
 
-const container=document.querySelector(".tasks-grid")
+const list=document.getElementById("tasksList")
 
-container.innerHTML=""
+list.innerHTML=""
 
-const tasks=objects[selectedObject].tasks
+let tasks=objects[selectedObject].tasks
 
-tasks.forEach((task,index)=>{
+const filter=employeeFilter.value
+
+tasks.forEach((task,i)=>{
+
+if(filter!="all" && task.employee!=filter) return
 
 const card=document.createElement("div")
 
@@ -128,25 +162,26 @@ card.className="card"
 
 card.innerHTML=`
 
-<h4>${task.name}</h4>
+<b>${task.name}</b>
+
 <p>${task.desc}</p>
 
-<button onclick="deleteTask(${index})">Удалить</button>
+<p>👷 ${task.employee}</p>
+
+<p>📊 ${task.status}</p>
+
+<button onclick="deleteTask(${i})">Удалить</button>
 
 `
 
-container.appendChild(card)
+list.appendChild(card)
 
 })
 
 }
 
 
-window.deleteTask=function(index){
-
-objects[selectedObject].tasks.splice(index,1)
-
-saveData()
+employeeFilter.onchange=function(){
 
 renderTasks()
 
