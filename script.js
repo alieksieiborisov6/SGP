@@ -6,41 +6,37 @@ const employeeFilter = document.getElementById("employeeFilter")
 
 
 function save(){
-
 localStorage.setItem("objects",JSON.stringify(objects))
-
 }
 
 
-function openModal(id){
-
+window.openModal=function(id){
 document.getElementById(id).style.display="flex"
-
 }
 
 
-function closeModal(id){
-
+window.closeModal=function(id){
 document.getElementById(id).style.display="none"
-
 }
 
 
-function createObject(){
+window.createObject=function(){
 
 const name=document.getElementById("objectName").value
 const desc=document.getElementById("objectDesc").value
 
+if(!name){
+alert("Введите название объекта")
+return
+}
+
 objects.push({
-
-name,
-desc,
+name:name,
+desc:desc,
 tasks:[]
-
 })
 
 save()
-
 renderObjects()
 
 closeModal("objectModal")
@@ -48,7 +44,7 @@ closeModal("objectModal")
 }
 
 
-function deleteObject(index){
+window.deleteObject=function(index){
 
 objects.splice(index,1)
 
@@ -76,7 +72,6 @@ card.className="card"
 card.innerHTML=`
 
 <b>${obj.name}</b>
-
 <p>${obj.desc}</p>
 
 <button onclick="deleteObject(${i})">Удалить</button>
@@ -86,7 +81,6 @@ card.innerHTML=`
 card.onclick=()=>{
 
 selectedObject=i
-
 renderTasks()
 
 }
@@ -98,14 +92,11 @@ list.appendChild(card)
 }
 
 
-function createTask(){
+window.createTask=function(){
 
 if(selectedObject===null){
-
-alert("Выберите объект")
-
+alert("Сначала выберите объект")
 return
-
 }
 
 const name=document.getElementById("taskName").value
@@ -114,16 +105,13 @@ const employee=document.getElementById("taskEmployee").value
 const status=document.getElementById("taskStatus").value
 
 objects[selectedObject].tasks.push({
-
-name,
-desc,
-employee,
-status
-
+name:name,
+desc:desc,
+employee:employee,
+status:status
 })
 
 save()
-
 renderTasks()
 
 closeModal("taskModal")
@@ -131,7 +119,7 @@ closeModal("taskModal")
 }
 
 
-function deleteTask(index){
+window.deleteTask=function(index){
 
 objects[selectedObject].tasks.splice(index,1)
 
@@ -143,6 +131,8 @@ renderTasks()
 
 
 function renderTasks(){
+
+if(selectedObject===null) return
 
 const list=document.getElementById("tasksList")
 
@@ -182,9 +172,7 @@ list.appendChild(card)
 
 
 employeeFilter.onchange=function(){
-
 renderTasks()
-
 }
 
 
