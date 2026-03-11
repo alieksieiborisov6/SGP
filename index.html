@@ -27,7 +27,7 @@
 
 <div class="objects">
 
-<div class="top-bar">
+<div class="topbar">
 
 <h2>Объекты</h2>
 
@@ -42,7 +42,7 @@
 
 <div class="tasks">
 
-<div class="top-bar">
+<div class="topbar">
 
 <h2>Задачи</h2>
 
@@ -57,19 +57,19 @@
 </div>
 
 
-<!-- МОДАЛКА ОБЪЕКТА -->
+<!-- OBJECT MODAL -->
 
 <div id="objectModal" class="modal">
 
 <div class="modal-content">
 
-<h3>Создать объект</h3>
+<h3>Объект</h3>
 
 <input id="objectName" placeholder="Название">
 
 <textarea id="objectDesc" placeholder="Описание"></textarea>
 
-<button onclick="createObject()">Создать</button>
+<button onclick="saveObject()">Сохранить</button>
 
 <button onclick="closeModal('objectModal')">Отмена</button>
 
@@ -78,13 +78,13 @@
 </div>
 
 
-<!-- МОДАЛКА ЗАДАЧИ -->
+<!-- TASK MODAL -->
 
 <div id="taskModal" class="modal">
 
 <div class="modal-content">
 
-<h3>Создать задачу</h3>
+<h3>Задача</h3>
 
 <input id="taskName" placeholder="Название">
 
@@ -99,22 +99,15 @@
 
 </select>
 
-<select id="taskStatus">
+<input type="date" id="taskDeadline">
 
-<option>Задано</option>
-<option>В работе</option>
-<option>Завершено</option>
-
-</select>
-
-<button onclick="createTask()">Создать</button>
+<button onclick="saveTask()">Сохранить</button>
 
 <button onclick="closeModal('taskModal')">Отмена</button>
 
 </div>
 
 </div>
-
 
 <script src="script.js"></script>
 
