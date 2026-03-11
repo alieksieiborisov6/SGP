@@ -2,93 +2,84 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" href="logo.jpg" type="image/x-icon">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SGP</title>
+<title>SGP Управление объектами</title>
 <link rel="stylesheet" href="style.css">
-
-<!-- Firebase SDK через CDN -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDRmT2RygFihWS9OmPNt0SDWTkZlA6-bKM",
-  authDomain: "sgp2026-3184d.firebaseapp.com",
-  projectId: "sgp2026-3184d",
-  storageBucket: "sgp2026-3184d.firebasestorage.app",
-  messagingSenderId: "566527410900",
-  appId: "1:566527410900:web:4ec4cbdf220224c6e0b141",
-  measurementId: "G-WSHB0351M4"
-};
-
-window.app = initializeApp(firebaseConfig);
-window.db = getFirestore(app);
-</script>
 </head>
+
 <body>
+
 <header>
-    <h1>Компания SGP</h1>
+<h1>SGP Управление объектами</h1>
 </header>
 
 <div class="container">
-    <div class="left-panel">
-        <h2>Объекты</h2>
-        <button class="add-btn" onclick="openModal('add-object')">+ Добавить объект</button>
-        <div class="objects-grid"></div>
-    </div>
 
-    <div class="right-panel">
-        <h2>Задачи</h2>
-        <button class="add-btn" onclick="openModal('add-task')">+ Добавить задачу</button>
-        <div class="tasks-grid"></div>
-    </div>
+<div class="left-panel">
+
+<h2>Объекты</h2>
+
+<button onclick="openModal('add-object')">Добавить объект</button>
+
+<div class="objects-grid"></div>
+
 </div>
 
-<!-- Модалки -->
+
+<div class="right-panel">
+
+<h2>Задачи</h2>
+
+<button onclick="openModal('add-task')">Добавить задачу</button>
+
+<div class="tasks-grid"></div>
+
+</div>
+
+</div>
+
+
+<!-- МОДАЛКА ОБЪЕКТА -->
+
 <div id="add-object" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('add-object')">&times;</span>
-    <h3>Добавить объект</h3>
-    <input type="text" id="object-name" placeholder="Название объекта">
-    <textarea id="object-desc" placeholder="Описание объекта"></textarea>
-    <button class="save-btn" onclick="addObject()">Сохранить</button>
-  </div>
+
+<div class="modal-content">
+
+<span onclick="closeModal('add-object')" class="close">×</span>
+
+<h3>Добавить объект</h3>
+
+<input id="object-name" placeholder="Название объекта">
+
+<textarea id="object-desc" placeholder="Описание"></textarea>
+
+<button onclick="addObject()">Сохранить</button>
+
 </div>
+
+</div>
+
+
+<!-- МОДАЛКА ЗАДАЧИ -->
 
 <div id="add-task" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('add-task')">&times;</span>
-    <h3>Добавить задачу</h3>
-    <input type="text" id="task-name" placeholder="Название задачи">
-    <textarea id="task-desc" placeholder="Описание задачи"></textarea>
-    <select id="task-status">
-      <option value="set">Задано</option>
-      <option value="in_progress">В работе</option>
-      <option value="done">Завершено</option>
-    </select>
-    <select id="task-employee"></select>
-    <button class="save-btn" onclick="addTask()">Сохранить</button>
-  </div>
+
+<div class="modal-content">
+
+<span onclick="closeModal('add-task')" class="close">×</span>
+
+<h3>Добавить задачу</h3>
+
+<input id="task-name" placeholder="Название задачи">
+
+<textarea id="task-desc" placeholder="Описание"></textarea>
+
+<button onclick="addTask()">Сохранить</button>
+
 </div>
 
-<div id="edit-task" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('edit-task')">&times;</span>
-    <h3>Редактировать задачу</h3>
-    <input type="text" id="edit-task-name" placeholder="Название задачи">
-    <textarea id="edit-task-desc" placeholder="Описание задачи"></textarea>
-    <select id="edit-task-status">
-      <option value="set">Задано</option>
-      <option value="in_progress">В работе</option>
-      <option value="done">Завершено</option>
-    </select>
-    <select id="edit-task-employee"></select>
-    <button class="save-btn" onclick="saveTaskEdit()">Сохранить</button>
-  </div>
 </div>
 
-<script type="module" src="script.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
-
