@@ -31,7 +31,9 @@
 
 <h2>Объекты</h2>
 
-<button onclick="openModal('objectModal')">+ Объект</button>
+<button class="addObjectBtn" onclick="openModal('objectModal')">
++ Добавить объект
+</button>
 
 </div>
 
@@ -46,7 +48,9 @@
 
 <h2>Задачи</h2>
 
-<button onclick="openModal('taskModal')">+ Задача</button>
+<button class="addTaskBtn" onclick="openModal('taskModal')">
++ Добавить задачу
+</button>
 
 </div>
 
@@ -55,6 +59,7 @@
 </div>
 
 </div>
+
 
 
 <!-- OBJECT MODAL -->
@@ -69,13 +74,14 @@
 
 <textarea id="objectDesc" placeholder="Описание"></textarea>
 
-<button onclick="saveObject()">Сохранить</button>
+<button class="saveBtn" onclick="saveObject()">Сохранить</button>
 
 <button onclick="closeModal('objectModal')">Отмена</button>
 
 </div>
 
 </div>
+
 
 
 <!-- TASK MODAL -->
@@ -101,7 +107,7 @@
 
 <input type="date" id="taskDeadline">
 
-<button onclick="saveTask()">Сохранить</button>
+<button class="saveBtn" onclick="saveTask()">Сохранить</button>
 
 <button onclick="closeModal('taskModal')">Отмена</button>
 
